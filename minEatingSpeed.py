@@ -22,12 +22,12 @@ def minEatingSpeed(piles, H):
 # Приклади використання
 piles1 = [3, 6, 7, 11]
 H1 = 8
-print(minEatingSpeed(piles1, H1))  # Результат: 4
+print(minEatingSpeed(piles1, H1))  
 
 piles2 = [30, 11, 23, 4, 20]
 H2 = 5
-print(minEatingSpeed(piles2, H2))  # Результат: 30
+print(minEatingSpeed(piles2, H2))  
 
 piles3 = [30, 11, 23, 4, 20]
 H3 = 6
-print(minEatingSpeed(piles3, H3))  # Результат: 23
+print(minEatingSpeed(piles3, H3)) 
