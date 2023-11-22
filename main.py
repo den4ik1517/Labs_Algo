@@ -1,56 +1,28 @@
-from collections import deque
+def count_possible_pairs(n, pairs):
+    # Створення пустого словника для зберігання кількості хлопців і дівчат у кожному племені
+    tribes = {}
 
-def read_adjacency_list(file_path):
-    with open(file_path, 'r') as file:
-        graph = {}
-        for line in file:
-            try:
-                vertex, edges = line.strip().split(':')
-            except ValueError:
-                continue
+    # Заповнення словника на основі вхідних даних
+    for pair in pairs:
+        for person in pair:
+            if person not in tribes:
+                tribes[person] = {'boys': 0, 'girls': 0}
 
-            edges = [e.strip() for e in edges.split()]
-            graph[vertex] = edges
-    return graph
+    for pair in pairs:
+        tribes[pair[0]]['boys'] += 1
+        tribes[pair[1]]['girls'] += 1
 
-def bfs(graph, start):
-    visited = set()
-    queue = deque([start])
+    # Підрахунок кількості можливих пар
+    possible_pairs = 0
+    for pair in pairs:
+        possible_pairs += (tribes[pair[0]]['girls'] - 1) + (tribes[pair[1]]['boys'] - 1)
 
-    while queue:
-        vertex = queue.popleft()
-        if vertex not in visited:
-            visited.add(vertex)
-            queue.extend([u for u in graph[vertex] if u not in visited])
+    return possible_pairs
 
-    return visited
+# Зчитування вхідних даних
+n = int(input())
+pairs = [list(map(int, input().split())) for _ in range(n)]
 
-def find_roots(graph):
-    all_vertices = set(graph.keys())
-    for edges in graph.values():
-        for edge in edges:
-            if edge not in graph:
-                graph[edge] = []
-
-    for vertex in all_vertices:
-        if bfs(graph, vertex) == all_vertices:
-            return [vertex]
-
-    return []
-
-file_path = 'input.txt'
-graph = read_adjacency_list(file_path)
-
-root_vertices = find_roots(graph)
-
-with open('output.txt', 'w') as f:
-    if root_vertices:
-        for root in root_vertices:
-            f.write(f'{root}\n')
-    else:
-        f.write('-1\n')
-
-if root_vertices:
-    print(f'Root vertices: {root_vertices}')
-else:
-    print('No root vertices found. Written -1 to output.txt')
+# Вивід результату
+result = count_possible_pairs(n, pairs)
+print(-result)
