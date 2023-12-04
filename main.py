@@ -1,56 +1,27 @@
-from collections import deque
+def naive_search(haystack, needle):
+    comparisons = 0
+    last_index = -1
 
-def read_adjacency_list(file_path):
-    with open(file_path, 'r') as file:
-        graph = {}
-        for line in file:
-            try:
-                vertex, edges = line.strip().split(':')
-            except ValueError:
-                continue
+    # Проходимо по основній стрічці "haystack"
+    for i in range(len(haystack) - len(needle) + 1):
+        match = True
 
-            edges = [e.strip() for e in edges.split()]
-            graph[vertex] = edges
-    return graph
+        # Порівнюємо символи з "needle" та "haystack"
+        for j in range(len(needle)):
+            comparisons += 1
+            if haystack[i + j] != needle[j]:
+                match = False
+                break
 
-def bfs(graph, start):
-    visited = set()
-    queue = deque([start])
+        # Якщо відбулось входження, оновлюємо останній індекс
+        if match:
+            last_index = i
 
-    while queue:
-        vertex = queue.popleft()
-        if vertex not in visited:
-            visited.add(vertex)
-            queue.extend([u for u in graph[vertex] if u not in visited])
+    return last_index, comparisons
 
-    return visited
+haystack = "ababcababcabc"
+needle = "abc"
+result_index, comparisons_count = naive_search(haystack, needle)
 
-def find_roots(graph):
-    all_vertices = set(graph.keys())
-    for edges in graph.values():
-        for edge in edges:
-            if edge not in graph:
-                graph[edge] = []
-
-    for vertex in all_vertices:
-        if bfs(graph, vertex) == all_vertices:
-            return [vertex]
-
-    return []
-
-file_path = 'input.txt'
-graph = read_adjacency_list(file_path)
-
-root_vertices = find_roots(graph)
-
-with open('output.txt', 'w') as f:
-    if root_vertices:
-        for root in root_vertices:
-            f.write(f'{root}\n')
-    else:
-        f.write('-1\n')
-
-if root_vertices:
-    print(f'Root vertices: {root_vertices}')
-else:
-    print('No root vertices found. Written -1 to output.txt')
+print(f"Останнє входження '{needle}' в '{haystack}' знаходиться на індексі {result_index}.")
+print(f"Кількість порівнянь: {comparisons_count}")
